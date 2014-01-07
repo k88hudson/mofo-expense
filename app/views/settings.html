@@ -1,0 +1,41 @@
+<div>
+  <form
+    novalidate
+    class="form"
+    name="settings_form">
+
+    <div class="form-field third">
+      <label for="name">Name</label>
+      <input type="text" name="name" ng-model="settings.name">
+    </div>
+
+    <div class="form-field third">
+      <label for="date">Month/Year</label>
+      <input type="text" name="date" ng-model="settings.date">
+      <div class="note">
+        e.g. March 2013
+      </div>
+    </div>
+
+    <div class="form-field third">
+      <label for="manager">Manager</label>
+      <input type="text" name="manager" ng-model="settings.manager" value=''>
+    </div>
+
+    <div class="form-field">
+      <table ng-show="currencies">
+        <tr ng-repeat="(code, toUSD) in currencies">
+          <td>1 {{code}} = </td>
+          <td>{{toUSD}} USD</td>
+          <td><button ng-click="deleteCurrency(code)">Remove</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="form-field">
+      <label>Add Currency Exchange Rate for Foreign Currency Expenses:</label>
+      $1.00 <input ng-model="new_currency_code" class="inline currency-code" placeholder="CAD"> = $<input ng-model="new_currency_to_usd" class="inline currency" placeholder="0.00"> USD
+      <button ng-click="addCurrency()">Add conversion rate</button>
+    </div>
+  </form>
+</div>

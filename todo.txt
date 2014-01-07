@@ -1,0 +1,4 @@
+TODO
+
+- Go through grunt file, set up deployment
+- Add grunt task to compile less, remove css file

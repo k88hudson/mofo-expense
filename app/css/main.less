@@ -1,0 +1,263 @@
+@red: #DE5B3C;
+@green: #15A38D;
+@lightyellow: #F3EFC2;
+@baseFontSize: 14px;
+@leading: 1.4rem;
+
+.clearfix() {
+  zoom: 1;
+  &:before { content: ''; display: block; }
+  &:after { content: ''; display: table; clear: both; }
+}
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+ }
+
+
+body {
+  font-family: 'Asap', sans-serif;
+  padding: 0;
+  margin: 0;
+  font-size: @baseFontSize;
+  line-height: @leading;
+}
+
+label {
+  display: block;
+}
+
+header {
+  color: #FFF;
+  background: #272822;
+  padding: 20px;
+}
+
+.animate-show {
+  -webkit-animation: fadeIn 0.3s;
+  -moz-animation: fadeIn 0.3s;
+  animation: fadeIn 0.3s;
+}
+
+/*********************************************************
+* Type
+*/
+
+h1, .h1 {
+  line-height: 2 * @leading;
+  font-size: 3.375em;
+}
+
+h2, .h2 {
+  line-height: 2 * @leading;
+  font-size: 2.25em;
+}
+
+h3, .h3 {
+  font-size: 1.5em;
+}
+
+.h1, .h2, .h3 {
+  vertical-align: middle;
+}
+
+/*********************************************************
+* Container
+*/
+// .main {
+//   display: flex;
+// }
+
+// .expense-display {
+//   flex-grow: 1;
+// }
+
+.expense-display {
+  padding: 20px;
+}
+
+.new-expense-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: fade(@green, 80%);
+  overflow: scroll;
+  form {
+    margin-top: 50px;
+    width: 500px;
+    padding: 30px;
+    background: white;
+    border: 1px solid @green;
+  }
+}
+
+
+/*********************************************************
+* Form
+*/
+.error-message,
+.note {
+  font-size: 0.9em;
+}
+
+.note {
+  color: #999;
+}
+
+.error-message {
+  color: @red;
+}
+
+.form {
+  margin: 0 auto;
+  line-height: 1.4em;
+}
+
+.form h3 {
+  margin-top: 0;
+}
+
+
+.form-field {
+  margin-bottom: 20px;
+  &.half,
+  &.third,
+  &.quarter {
+    .clearfix;
+    float: left;
+    margin-right: 1%;
+  }
+  &.quarter {
+    width: 24%;
+  }
+  &.half {
+    width: 48%;
+  }
+  &.third {
+    width: 33%;
+  }
+  &.highlighted {
+    background: lighten(#DDD, 5%);
+    padding: 10px;
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  &.inline {
+    margin-bottom: 0;
+    display: inline;
+    vertical-align: center;
+  }
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  color: #555;
+  border: 1px solid #CCC;
+  box-shadow: 0 4px 2px -3px fade(black, 10%);
+  padding: 5px;
+  height: @leading * 1.5;
+  margin: 0 0 5px 0;
+
+  &:focus {
+    outline: none;
+    border: 1px solid @green;
+  }
+
+  &.inline {
+    width: auto;
+    display: inline-block;
+  }
+
+  &.align-right {
+    text-align: right;
+  }
+
+  &.currency {
+    font-family: menlo, mono;
+  }
+  &.tiny {
+    width: 50%;
+  }
+}
+
+textarea {
+  height: @leading * 3;
+}
+
+input.ng-invalid,
+input.ng-invalid:focus {
+  color: @red;
+  border: 1px solid @red;
+}
+
+button {
+  display: inline-block;
+  font-size: inherit;
+  background: @red;
+  border: 1px solid darken(@red, 10%);
+  border-bottom: 4px solid darken(@red, 10%);
+  color: #FFF;
+  padding: 14px 25px;
+  border-radius: 3px;
+  cursor: pointer;
+  &:focus,
+  &:active {
+    outline: none;
+    border-bottom: 4px solid darken(@red, 10%);
+  }
+  &:hover {
+    background: lighten(@red, 5%);
+  }
+}
+
+.expense-table {
+  td {
+    width: 100/6%;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  thead tr {
+    font-weight: bold;
+  }
+  tr {
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid lighten(#CCC, 5%);
+  }
+  .total {
+    background: #EEE;
+    font-weight: bold;
+  }
+  td {
+    margin: 0;
+    padding: 10px;
+    border: none;
+    vertical-align: top;
+  }
+}
+
+
+/*********************************************************
+* Spacing
+*/
+
+.pad-right {
+  margin-right: @leading;
+}
+

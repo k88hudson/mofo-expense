@@ -1,0 +1,121 @@
+<div class="main">
+
+  <div class="container expense-display">
+    <p>
+      <button class="pad-right" ng-click="expense.show='on'">Add entry</button>
+      <span class="h1">Expenses for March 30</span>
+    </p>
+    <table class="expense-table">
+      <thead>
+        <tr>
+          <td>Date</td>
+          <td>Department/Project</td>
+          <td>Expense Type</td>
+          <td>Description/Reason</td>
+          <td>Location</td>
+          <td>Total</td>
+        </tr>
+      </thead>
+      <tr ng-repeat="item in expenses">
+        <td>{{item.date}}</td>
+        <td>{{item.dept_project}}</td>
+        <td>{{item.expense_type}}</td>
+        <td>{{item.description}}</td>
+        <td>{{item.location}}</td>
+        <td>{{item.total}} {{item.currency}}</td>
+      </tr>
+      <tr class="total">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>$100.00 USD</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="container new-expense-container animate-show" ng-show="expense.show">
+    <form
+      novalidate
+      class="form"
+      name="new_expense"
+      ng-submit="submit()">
+    <h3>Add expense</h3>
+
+    <div class="form-field half">
+      <label for="date">Date</label>
+      <input type="text" name="date" ng-model="expense.date">
+      <div class="note">
+        {{formattedDate(expense.date)}}
+      </div>
+    </div>
+
+    <div class="form-field half">
+      <label for="location">Location</label>
+      <input type="text" name="location" ng-model="expense.location">
+      <div class="note">
+        e.g. Ocho Hotel, Toronto
+      </div>
+    </div>
+
+    <div class="form-field half">
+      <label for="dept_project">Department/Project</label>
+      <select name="dept_project" ng-model="expense.dept_project">
+        <option ng-repeat="item in deptProjectList" value="{{item}}">{{item}}</option>
+      </select>
+      <div class="error-message" ng-show="new_expense.dept_project.$invalid">
+        Please choose a dept/project
+      </div>
+    </div>
+
+    <div class="form-field half">
+      <label for="expense_type">Expense Type</label>
+      <select name="expense_type" ng-model="expense.expense_type">
+        <option ng-repeat="item in expenseTypeList" value="{{item}}">{{item}}</option>
+      </select>
+      <div class="error-message" ng-show="new_expense.expense_type.$invalid">
+        Please choose a dept/project
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="description">Description and reason for expense</label>
+      <textarea name="description" ng-model="expense.description"></textarea>
+      <div class="error-message" ng-show="new_expense.description.$invalid">
+        Please include a short description.
+      </div>
+    </div>
+
+    <div class="form-field quarter">
+      <label for="total">Total</label>
+      <input class="currency" type="text" name="total" ng-model="expense.total">
+      <div class="note">
+        {{expense.exchangedAmount() | currency}} USD
+      </div>
+      <div class="error-message" ng-show="new_expense.total.$invalid">
+        This is not a valid amount.
+      </div>
+    </div>
+
+    <div class="form-field quarter">
+      <label for="total">Currency</label>
+      <select name="expense.currencyCode" ng-model="expense.currencyCode" ng-change="setCurrency()">
+        <option selected="selected" value="USD">USD</option>
+        <option ng-repeat="(code, inUSD) in currencies" value="{{code}}">{{code}}</option>
+        <option value=''>Other...</option>
+      </select>
+    </div>
+
+    <div class="form-field half highlighted">
+      <label for="total">Exchange Rate</label>
+        <label class="inline">1 USD =</label>
+        <input ng-model="expense.currencyToUSD" class="inline tiny" placeholder="0.00">
+        <label class="inline">{{expense.currencyCode}}</label>
+    </div>
+
+    <div class="form-field">
+      <button ng-click="addExpense()">Add expense</button>
+    </form>
+  </div>
+</div>
