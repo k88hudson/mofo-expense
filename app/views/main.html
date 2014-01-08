@@ -3,7 +3,7 @@
   <div class="container expense-display">
     <p>
       <button class="pad-right" ng-click="expense.show='on'">Add entry</button>
-      <span class="h1">Expenses for March 30</span>
+      <span class="h1">Expenses</span>
     </p>
     <table class="expense-table">
       <thead>
@@ -22,7 +22,7 @@
         <td>{{item.expense_type}}</td>
         <td>{{item.description}}</td>
         <td>{{item.location}}</td>
-        <td>{{item.total}} {{item.currency}}</td>
+        <td>{{exchangedAmount(item.total, item.rate) | currency}} USD ({{item.total}} {{item.currency}})</td>
       </tr>
       <tr class="total">
         <td></td>
@@ -30,7 +30,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>$100.00 USD</td>
+        <td>{{grandTotal() | currency}} USD</td>
       </tr>
     </table>
   </div>
@@ -45,7 +45,7 @@
 
     <div class="form-field half">
       <label for="date">Date</label>
-      <input type="text" name="date" ng-model="expense.date" placeholder="Enter a date in any format...">
+      <input required type="text" name="date" ng-model="expense.date" placeholder="Enter a date in any format...">
       <div class="note">
         {{formattedDate(expense.date)}}
       </div>
@@ -53,7 +53,7 @@
 
     <div class="form-field half">
       <label for="location">Location</label>
-      <input type="text" name="location" ng-model="expense.location">
+      <input required type="text" name="location" ng-model="expense.location">
       <div class="note">
         e.g. Ocho Hotel, Toronto
       </div>
@@ -61,37 +61,37 @@
 
     <div class="form-field half">
       <label for="dept_project">Department/Project</label>
-      <select name="dept_project" ng-model="expense.dept_project">
+      <select required name="dept_project" ng-model="expense.dept_project">
         <option ng-repeat="item in deptProjectList" value="{{item}}">{{item}}</option>
       </select>
-      <div class="error-message" ng-show="new_expense.dept_project.$invalid">
-        Please choose a dept/project
+      <div class="error-message" ng-show="new_expense.dept_project.$dirty && new_expense.dept_project.$error.required">
+        Please choose a department/project
       </div>
     </div>
 
     <div class="form-field half">
       <label for="expense_type">Expense Type</label>
-      <select name="expense_type" ng-model="expense.expense_type">
+      <select required name="expense_type" ng-model="expense.expense_type">
         <option ng-repeat="item in expenseTypeList" value="{{item}}">{{item}}</option>
       </select>
-      <div class="error-message" ng-show="new_expense.expense_type.$invalid">
-        Please choose a dept/project
+      <div class="error-message" ng-show="new_expense.expense_type.$dirty && new_expense.expense_type.$error.required">
+        Please choose an expense type
       </div>
     </div>
 
     <div class="form-field">
       <label for="description">Description and reason for expense</label>
-      <textarea name="description" ng-model="expense.description"></textarea>
-      <div class="error-message" ng-show="new_expense.description.$invalid">
+      <textarea required name="description" ng-model="expense.description"></textarea>
+      <div class="error-message" ng-show="new_expense.description.$dirty && new_expense.description.$error.required">
         Please include a short description.
       </div>
     </div>
 
     <div class="form-field quarter">
       <label for="total">Total</label>
-      <input currency-input class="currency" type="text" name="total" ng-model="expense.total" placeholder="0.00">
+      <input required currency-input class="currency" type="text" name="total" ng-model="expense.total" placeholder="0.00">
       <div class="note" ng-show="new_expense.total.$valid">
-        {{expense.exchangedAmount() | currency}} USD
+        {{exchangedAmount(expense.total, expense.rate) | currency}} USD
       </div>
       <div class="error-message" ng-show="new_expense.total.$error.currency">
         Please enter an amount e.g. 21.00
@@ -100,7 +100,7 @@
 
     <div class="form-field quarter">
       <label for="total">Currency</label>
-      <select name="expense.currency" ng-model="expense.currency" ng-change="setCurrency()">
+      <select required name="expense.currency" ng-model="expense.currency" ng-change="setCurrency()">
         <option selected="selected" value="USD">USD</option>
         <option ng-repeat="(code, inUSD) in currencies" value="{{code}}">{{code}}</option>
         <option value=''>Other...</option>
@@ -115,7 +115,8 @@
     </div>
 
     <div class="form-field">
-      <button ng-click="addExpense()">Add expense</button>
+      <button ng-disabled="new_expense.$invalid" ng-click="addExpense()">Add expense</button>
+      <button ng-click="expense.show=''">Cancel</button>
     </form>
   </div>
 </div>

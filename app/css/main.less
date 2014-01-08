@@ -190,17 +190,17 @@ textarea {
   &.tiny {
     width: 50%;
   }
+  &.ng-invalid:not(.ng-pristine),
+  &.ng-invalid:not(.ng-pristine):focus {
+    color: @red;
+    border: 1px solid @red;
+  }
 }
 
 textarea {
   height: @leading * 3;
 }
 
-input.ng-invalid,
-input.ng-invalid:focus {
-  color: @red;
-  border: 1px solid @red;
-}
 
 button {
   display: inline-block;
@@ -219,6 +219,9 @@ button {
   }
   &:hover {
     background: lighten(@red, 5%);
+  }
+  &[disabled] {
+    opacity: 0.5;
   }
 }
 

@@ -15,11 +15,15 @@ angular.module('mofoExpenseApp')
             .replace(/,/g, '')
             .replace(/\$/g, '')
           );
+
           if (currency) {
             ctrl.$setValidity('currency', true);
-            return currency.replace(/\$/g, '');
+            return currency
+              .replace(/\$/g, '')
+              .replace(/,/g, '');
           } else {
             ctrl.$setValidity('currency', false);
+            return currency;
           }
         }
 
@@ -30,7 +34,7 @@ angular.module('mofoExpenseApp')
 
         // Runs when the model gets updated directly
         ctrl.$render = function() {
-          element.val(ctrl.$viewValue);
+          element.val(ctrl.$viewValue || '');
         };
 
         // Update the actual input element
@@ -51,9 +55,6 @@ angular.module('mofoExpenseApp')
 
       self.currency = "USD";
       self.rate = 1;
-      self.exchangedAmount = function() {
-        return +$scope.expense.total * (1 / self.rate);
-      };
 
       for (var option in options) {
         self[option] = options[option];
@@ -76,13 +77,17 @@ angular.module('mofoExpenseApp')
     // Set a default expense
     $scope.expense = new ExpenseConstructor();
 
+    $scope.exchangedAmount = function(amt, rate) {
+      return +amt * (1 / rate);
+    };
+
     $scope.formattedDate = function(date) {
       date = date || '';
-      var formatted = chrono.parse(date);
-      if (!formatted[0]) {
+      var formatted = chrono.parseDate(date);
+      if (!formatted) {
         return 'Not a valid date';
       } else {
-        return (formatted[0].start.month + 1) + '/' + formatted[0].start.day + '/' + formatted[0].start.year;
+        return moment(formatted).format('MMMM Do YYYY');
       }
     };
 
@@ -99,6 +104,15 @@ angular.module('mofoExpenseApp')
         currency: oldCurrencyCode,
         rate: oldCurrencyRate
       });
+      $scope.new_expense.$setPristine();
+    };
+
+    $scope.grandTotal = function() {
+      var total = 0;
+      $scope.expenses.forEach(function(item) {
+        total += $scope.exchangedAmount(item.total, item.rate);
+      });
+      return total;
     };
 
     $scope.deptProjectList = [

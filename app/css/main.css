@@ -174,13 +174,17 @@ select.tiny,
 textarea.tiny {
   width: 50%;
 }
-textarea {
-  height: 4.199999999999999rem;
-}
-input.ng-invalid,
-input.ng-invalid:focus {
+input.ng-invalid:not(.ng-pristine),
+select.ng-invalid:not(.ng-pristine),
+textarea.ng-invalid:not(.ng-pristine),
+input.ng-invalid:not(.ng-pristine):focus,
+select.ng-invalid:not(.ng-pristine):focus,
+textarea.ng-invalid:not(.ng-pristine):focus {
   color: #de5b3c;
   border: 1px solid #de5b3c;
+}
+textarea {
+  height: 4.199999999999999rem;
 }
 button {
   display: inline-block;
@@ -200,6 +204,9 @@ button:active {
 }
 button:hover {
   background: #e26d52;
+}
+button[disabled] {
+  opacity: 0.5;
 }
 .expense-table td {
   width: 16.666666666666668%;
