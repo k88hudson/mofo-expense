@@ -57,6 +57,18 @@ server.route({
   }
 });
 
+server.route({
+  method: 'GET',
+  path: '/bower_components/{path*}',
+  handler: {
+    directory: {
+      path: './bower_components',
+      listing: false
+    }
+  }
+});
+
+
 //API
 server.route({
   method: 'POST',
