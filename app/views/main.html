@@ -45,9 +45,18 @@
 
     <div class="form-field half">
       <label for="date">Date</label>
-      <input required type="text" name="date" ng-model="expense.date" placeholder="Enter a date in any format...">
-      <div class="note">
-        {{formattedDate(expense.date)}}
+      <input
+        date-input
+        required
+        type="text"
+        name="date"
+        ng-model="expense.date"
+        placeholder="Enter a date in any format...">
+      <div class="note" ng-show="new_expense.date.$pristine || new_expense.date.$valid">
+        e.g. MM/DD/YYYY
+      </div>
+      <div class="error-message" ng-show="new_expense.date.$dirty && new_expense.date.$error.date">
+        Please format MM/DD/YYYY
       </div>
     </div>
 

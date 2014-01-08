@@ -39,8 +39,46 @@ angular.module('mofoExpenseApp')
 
         // Update the actual input element
         element.bind('change', function() {
-          var raw = element.val()
+          var raw = element.val();
           element.val(rawToCurrency(raw));
+        });
+
+      }
+    };
+  })
+  .directive('dateInput', function($filter) {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ctrl) {
+
+        // Converts a currency in any format to 00.00, if possible.
+        // If a conversion can't be made, the input is set to invalid with a 'currency' error.
+        function reformat(raw) {
+          var date = moment(raw);
+          if (raw && date.isValid()) {
+            ctrl.$setValidity('date', true);
+            return date.format('MM/DD/YYYY');
+          } else {
+            ctrl.$setValidity('date', false);
+            return raw;
+          }
+        }
+
+        // Update the model after user input
+        ctrl.$parsers.push(function(viewValue) {
+          return reformat(viewValue);
+        });
+
+        // Runs when the model gets updated directly
+        ctrl.$render = function() {
+          element.val(ctrl.$viewValue || '');
+        };
+
+        // Update the actual input element
+        element.bind('change', function() {
+          var raw = element.val();
+          element.val(reformat(raw));
         });
 
       }
@@ -81,14 +119,11 @@ angular.module('mofoExpenseApp')
       return +amt * (1 / rate);
     };
 
-    $scope.formattedDate = function(date) {
-      date = date || '';
-      var formatted = chrono.parseDate(date);
-      if (!formatted) {
-        return 'Not a valid date';
-      } else {
-        return moment(formatted).format('MMMM Do YYYY');
+    $scope.humanDate = function(date) {
+      if (!date) {
+        return '';
       }
+      return moment(date).format('MMMM Do YYYY');
     };
 
     $scope.setCurrency = function() {

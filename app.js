@@ -28,7 +28,6 @@ server.pack.require('crumb', {
   restful: true
 }, errorHandler);
 
-
 // Angular Pages
 
 var pages = [
@@ -115,8 +114,7 @@ server.route({
       req.reply(resp);
     });
   }
-})
-
+});
 
 // Start the server
 server.start(function() {
