@@ -2,7 +2,7 @@
 
 
 angular.module('mofoExpenseApp')
-  .directive('currencyInput', function($filter, $browser) {
+  .directive('currencyInput', function($filter) {
     return {
       restrict: 'A',
       require: 'ngModel',
