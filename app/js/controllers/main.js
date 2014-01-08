@@ -8,6 +8,8 @@ angular.module('mofoExpenseApp')
       require: 'ngModel',
       link: function(scope, element, attrs, ctrl) {
 
+        // Converts a currency in any format to 00.00, if possible.
+        // If a conversion can't be made, the input is set to invalid with a 'currency' error.
         function rawToCurrency(raw) {
           var currency = $filter('currency')(raw
             .replace(/,/g, '')
@@ -21,22 +23,22 @@ angular.module('mofoExpenseApp')
           }
         }
 
-        // This runs when we update the text field
+        // Update the model after user input
         ctrl.$parsers.push(function(viewValue) {
           return rawToCurrency(viewValue);
         });
 
-        // This runs when the model gets updated on the scope directly and keeps our view in sync
+        // Runs when the model gets updated directly
         ctrl.$render = function() {
           element.val(ctrl.$viewValue);
         };
 
-        var listener = function() {
+        // Update the actual input element
+        element.bind('change', function() {
           var raw = element.val()
           element.val(rawToCurrency(raw));
-        };
+        });
 
-        element.bind('change', listener);
       }
     };
   })
