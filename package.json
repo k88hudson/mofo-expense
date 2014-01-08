@@ -4,7 +4,6 @@
   "dependencies": {
     "hapi": "~1.20.0",
     "habitat": "~1.1.0",
-    "hyperquest": "~0.2.0",
     "request": "~2.30.0",
     "yar": "~0.4.1",
     "crumb": "~0.3.2",
