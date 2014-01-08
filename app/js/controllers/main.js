@@ -2,34 +2,77 @@
 
 
 angular.module('mofoExpenseApp')
+  .directive('currencyInput', function($filter, $browser) {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ctrl) {
+
+        function rawToCurrency(raw) {
+          var currency = $filter('currency')(raw
+            .replace(/,/g, '')
+            .replace(/\$/g, '')
+          );
+          if (currency) {
+            ctrl.$setValidity('currency', true);
+            return currency.replace(/\$/g, '');
+          } else {
+            ctrl.$setValidity('currency', false);
+          }
+        }
+
+        // This runs when we update the text field
+        ctrl.$parsers.push(function(viewValue) {
+          return rawToCurrency(viewValue);
+        });
+
+        // This runs when the model gets updated on the scope directly and keeps our view in sync
+        ctrl.$render = function() {
+          element.val(ctrl.$viewValue);
+        };
+
+        var listener = function() {
+          var raw = element.val()
+          element.val(rawToCurrency(raw));
+        };
+
+        element.bind('change', listener);
+      }
+    };
+  })
 
   .controller('MainCtrl', function($scope, $http) {
 
-    $scope.settings = {};
-    $scope.currencies = {};
+    // Todo: pull from user settings
+    function ExpenseConstructor(options) {
+      var self = this;
 
+      self.currency = "USD";
+      self.rate = 1;
+      self.exchangedAmount = function() {
+        return +$scope.expense.total * (1 / self.rate);
+      };
+
+      for (var option in options) {
+        self[option] = options[option];
+      }
+
+    }
+
+    // Grab currencies from server
     $http.get('/currencies')
-      .success(function(data){
-        $scope.currencies = data
+      .success(function(data) {
+        $scope.currencies = data;
       })
       .error(function(err) {
         console.log(err);
       });
 
-    $scope.expenses = [{
-      currency: "USD",
-      date: "03/14/2013",
-      dept_project: "Engagement/None",
-      expense_type: "Events (costs like catering, etc.)",
-      description: "London Undergroud travel",
-      location: "London, UK",
-      total: "31.04"
-    }];
+    // The list of all expenses
+    $scope.expenses = [];
 
-    $scope.expense = {
-      currencyCode: 'USD',
-      currencyToUSD: 1
-    };
+    // Set a default expense
+    $scope.expense = new ExpenseConstructor();
 
     $scope.formattedDate = function(date) {
       date = date || '';
@@ -41,36 +84,19 @@ angular.module('mofoExpenseApp')
       }
     };
 
-    $scope.expense.exchangedAmount = function() {
-      var rate = +$scope.currencies[$scope.expense.currencyCode] || 1;
-      var amt = +$scope.expense.total || 0;
-      return amt * 1/rate;
-    };
-
     $scope.setCurrency = function() {
-      $scope.expense.currencyToUSD = +$scope.currencies[$scope.expense.currencyCode] || 1;
-    };
-
-    $scope.addCurrency = function() {
-      $scope.currencies[$scope.new_currency_code] = $scope.new_currency_to_usd;
-      $scope.new_currency_code = '';
-      $scope.new_currency_to_usd = '';
-    };
-
-    $scope.deleteCurrency = function(code) {
-      delete $scope.currencies[code];
+      $scope.expense.rate = +$scope.currencies[$scope.expense.currency] || 1;
     };
 
     $scope.addExpense = function() {
-      var oldCurrencyCode = $scope.expense.currencyCode;
-      var oldCurrencyRate = $scope.expense.currencyToUSD;
-      var newExpense =  angular.copy($scope.expense);
+      var oldCurrencyCode = $scope.expense.currency;
+      var oldCurrencyRate = $scope.expense.rate;
+      var newExpense = angular.copy($scope.expense);
       $scope.expenses.push(newExpense);
-      $scope.expense = {
-        currencyCode: oldCurrencyCode,
-        currencyToUSD: oldCurrencyRate,
-        show: 0
-      };
+      $scope.expense = new ExpenseConstructor({
+        currency: oldCurrencyCode,
+        rate: oldCurrencyRate
+      });
     };
 
     $scope.deptProjectList = [

@@ -45,7 +45,7 @@
 
     <div class="form-field half">
       <label for="date">Date</label>
-      <input type="text" name="date" ng-model="expense.date">
+      <input type="text" name="date" ng-model="expense.date" placeholder="Enter a date in any format...">
       <div class="note">
         {{formattedDate(expense.date)}}
       </div>
@@ -89,18 +89,18 @@
 
     <div class="form-field quarter">
       <label for="total">Total</label>
-      <input class="currency" type="text" name="total" ng-model="expense.total">
-      <div class="note">
+      <input currency-input class="currency" type="text" name="total" ng-model="expense.total" placeholder="0.00">
+      <div class="note" ng-show="new_expense.total.$valid">
         {{expense.exchangedAmount() | currency}} USD
       </div>
-      <div class="error-message" ng-show="new_expense.total.$invalid">
-        This is not a valid amount.
+      <div class="error-message" ng-show="new_expense.total.$error.currency">
+        Please enter an amount e.g. 21.00
       </div>
     </div>
 
     <div class="form-field quarter">
       <label for="total">Currency</label>
-      <select name="expense.currencyCode" ng-model="expense.currencyCode" ng-change="setCurrency()">
+      <select name="expense.currency" ng-model="expense.currency" ng-change="setCurrency()">
         <option selected="selected" value="USD">USD</option>
         <option ng-repeat="(code, inUSD) in currencies" value="{{code}}">{{code}}</option>
         <option value=''>Other...</option>
@@ -110,8 +110,8 @@
     <div class="form-field half highlighted">
       <label for="total">Exchange Rate</label>
         <label class="inline">1 USD =</label>
-        <input ng-model="expense.currencyToUSD" class="inline tiny" placeholder="0.00">
-        <label class="inline">{{expense.currencyCode}}</label>
+        <input ng-model="expense.rate" class="inline tiny" placeholder="0.00">
+        <label class="inline">{{expense.currency}}</label>
     </div>
 
     <div class="form-field">

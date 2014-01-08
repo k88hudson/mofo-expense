@@ -107,7 +107,6 @@ server.route({
       json: {}
     }, function(err, response, body) {
       var resp;
-      console.log(body);
       if (body && body.rates) {
         resp = body.rates;
       } else {
