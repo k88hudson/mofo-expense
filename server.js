@@ -6,8 +6,7 @@ var request = require('request');
 Habitat.load();
 
 var env = new Habitat();
-var config = env.get('APP');
-var server = new Hapi.Server('localhost', config.port);
+var server = new Hapi.Server(env.get('hostname'), env.get('port'));
 
 function errorHandler(err) {
   if (err) {
@@ -19,7 +18,7 @@ server.pack.allow({
   ext: true
 }).require('yar', {
   cookieOptions: {
-    password: config.secret
+    password: env.get('secret')
   }
 }, errorHandler);
 
@@ -76,7 +75,7 @@ server.route({
   handler: function(req) {
     var self = this;
     var data = req.payload;
-    data.audience = config.audience;
+    data.audience = env.get('audience');
     request({
       method: 'post',
       url: 'https://verifier.login.persona.org/verify',
@@ -109,7 +108,7 @@ server.route({
   path: '/currencies',
   handler: function(req) {
     var query = {
-      app_id: config.openexchange
+      app_id: env.get('openexchange')
     };
     request({
       method: 'get',
